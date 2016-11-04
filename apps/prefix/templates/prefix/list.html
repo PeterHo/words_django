@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% load django2html %}
+
+{% block head_title %}欢迎回来{% endblock %}
+
+{% block content %}
+
+    <br>
+
+    {% url 'prefix:all' as all_url %}
+    {% if curLetter %}
+        {% raisedBtn all_url 'all' 'default' %}
+    {% else %}
+        {% raisedBtn all_url 'all' 'primary' %}
+    {% endif %}
+
+    {% for letter in letters %}
+        {% url 'prefix:list' letter=letter as letter_url %}
+        {% if curLetter == letter %}
+            {% raisedBtn letter_url letter 'primary' %}
+        {% else %}
+            {% raisedBtn letter_url letter 'default' %}
+        {% endif %}
+    {% endfor %}
+
+    <br>
+
+    {% for prefix in prefixes %}
+        <div>
+            {% flatBtn 'javascript:void(0)' prefix.prefix 'info' extraClass='lowercase' %}
+        </div>
+        {% showPrefixMeaningBlock prefix %}
+    {% endfor %}
+
+    <br>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            {% url 'prefix:add' as add_url %}
+            {% raisedBtn add_url 'all prefix' 'success' extraClass='btn-block' %}
+        </div>
+    </div>
+
+{% endblock %}

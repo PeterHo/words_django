@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% load django2html %}
+
+{% block head_title %}欢迎回来{% endblock %}
+
+
+{% block content %}
+    <br>
+    <br>
+
+    {% url 'prefix:add' as actionUrl %}
+
+    <form action="{{ actionUrl }}" method="post">
+        {% csrf_token %}
+
+        {% floatInput 'prefix' 'Prefix' %}
+
+        <div id="meanings">
+            {#            {% addPrefixMeaningBlock 0 %}#}
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-6">
+                    {% realBtn "cancel" "Cancel" "default" type="button" extraClass='btn-block' %}
+                </div>
+                <div class="col-md-6">
+                    {% realBtn "submit" "Submit" "primary" type="submit" extraClass='btn-block' %}
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block footer_javascript %}
+    <script>
+        var indexList = [0];
+        var wordIndexList = [0];
+
+        function addWord(meaningIndex) {
+            var index = Math.max.apply(null, wordIndexList) + 1;
+            var url = ("{% url 'prefix:wordTemplate' %}?meaningIndex=" + meaningIndex + '&wordIndex=' + index);
+            $.get(url, function (word) {
+                word = $.trim(word);
+                $("#meaning_word_" + meaningIndex).append(word);
+                wordIndexList.push(index);
+                $("button[id^='add_word_']").unbind('click').click(function () {
+                    const meaningIndex = meaningIndex;
+                    addWord(meaningIndex);
+                    return false;
+                });
+            });
+        }
+
+        function addMeaning() {
+            var index = Math.max.apply(null, indexList) + 1;
+            var url = ("{% url 'prefix:meaningTemplate' %}?index=" + index);
+            $.get(url, function (meaning) {
+                meaning = $.trim(meaning);
+                $("#meanings").append(meaning);
+                indexList.push(index);
+                $("button[id^='add_meaning_']").unbind('click').click(function () {
+                    addMeaning();
+                    return false;
+                });
+                addWord(index);
+            });
+        }
+
+        $(function () {
+            $("button[id^='del_meaning_']").click(function () {
+                alert("del meaning");
+                return false;
+            });
+            $("button[id^='add_meaning_']").click(function () {
+                addMeaning(1);
+                return false;
+            });
+            $("button[id^='del_word_']").click(function () {
+                alert("del word");
+                return false;
+            });
+            $("button[id^='add_word_']").click(function () {
+                alert("add word");
+                return false;
+            });
+            addMeaning();
+        });
+    </script>
+{% endblock %}

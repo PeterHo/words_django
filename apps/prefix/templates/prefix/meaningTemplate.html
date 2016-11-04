@@ -1,0 +1,11 @@
+{% load django2html %}
+
+<div id="meaning_{{ index }}" class="well">
+    {% realBtn 'del_meaning_'|add:index '<i class="material-icons">delete</i>' 'danger' extraClass='btn-xs pull-right' %}
+    {% realBtn 'add_meaning_'|add:index '<i class="material-icons">add</i>' 'success' extraClass='btn-xs pull-right' %}
+    {% floatInput 'meaning_chinese_'|add:index 'Chinese' %}
+    {% floatInput 'meaning_english_'|add:index 'English' %}
+    <div id="meaning_word_{{ index }}">
+
+    </div>
+</div>

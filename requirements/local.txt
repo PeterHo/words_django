@@ -1,0 +1,12 @@
+-r base.txt
+
+Django
+
+# sudo apt-get install python-setuptools libmysqld-dev libmysqlclient-dev python-dev
+# sudo easy_install mysql-python
+# MySQL-python==1.2.3
+
+# sudo apt-get install libxml2-dev libxslt-dev python-dev
+# lxml==2.3.4
+
+Pillow==2.3.0
