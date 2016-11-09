@@ -20,11 +20,23 @@
     <link rel="stylesheet"
           href="{% static 'vendor/bootstrap-material-design/dist/css/bootstrap-material-design.css' %}">
 
+    <link href="{% static 'vendor/snackbarjs/snackbar.css' %}" rel=stylesheet>
+    <!-- the default theme of SnackbarJS, find it in /themes-css -->
+    <link href="{% static 'vendor/snackbarjs/themes-css/material.css' %}" rel=stylesheet>
+
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
+    <script src="{% static 'vendor/jquery/jquery-2.1.4.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap-3.3.5-dist/js/bootstrap.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap-material-design/dist/js/material.js' %}"></script>
+    <script src="{% static 'vendor/snackbarjs/snackbar.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        $(function () {
+            $.material.init();
+        });
+    </script>
     {% block head_javascript %}{% endblock %}
-
 </head>
 <body>
 
@@ -32,15 +44,6 @@
     {% block content %}{% endblock %}
 </div>
 
-
-<script src="{% static 'vendor/jquery/jquery-2.1.4.js' %}"></script>
-<script src="{% static 'vendor/bootstrap-3.3.5-dist/js/bootstrap.js' %}"></script>
-<script src="{% static 'vendor/bootstrap-material-design/dist/js/material.js' %}"></script>
-<script>
-    $(function () {
-        $.material.init();
-    });
-</script>
 {% block footer_javascript %}{% endblock %}
 </body>
 </html>

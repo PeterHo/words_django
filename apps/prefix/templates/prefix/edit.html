@@ -7,6 +7,11 @@
 {% block head_title %}欢迎回来{% endblock %}
 
 {% block head_javascript %}
+    <script>
+        var prefix = JSON.parse("{{ prefix.as_json }}".replace(/&#39;/g, '"'));
+        console.log(prefix);
+        console.log(prefix['meanings']);
+    </script>
     {% include 'prefix/js.html' %}
     <script>
         $(function () {
@@ -19,10 +24,11 @@
     <br>
     <br>
 
-    <form action="{% url 'prefix:add' %}" method="post">
+    <form action="{% url 'prefix:edit' id=prefix.pk %}" method="post">
         {% csrf_token %}
 
-        {% floatInput 'prefix' 'Prefix' %}
+        {% floatInput 'prefix' 'Prefix' text=prefix.prefix %}
+
 
         <div id="meanings">
         </div>

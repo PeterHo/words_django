@@ -30,7 +30,8 @@
 
     {% for prefix in prefixes %}
         <div>
-            {% flatBtn 'javascript:void(0)' prefix.prefix 'info' extraClass='lowercase' %}
+            {% url 'prefix:edit' id=prefix.pk as edit_prefix_url %}
+            {% flatBtn edit_prefix_url prefix.prefix 'info' extraClass='lowercase' %}
         </div>
         {% showPrefixMeaningBlock prefix %}
     {% endfor %}

@@ -43,10 +43,11 @@ def flatBtn(href, text, color, type="", extraClass=""):
 
 
 @register.simple_tag
-def floatInput(id, label):
+def floatInput(id, label, text=""):
     ctx = {
         'id': id,
         'label': label,
+        'text': text,
     }
     return render_template_file("floatInput", ctx)
 

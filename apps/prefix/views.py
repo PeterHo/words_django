@@ -1,4 +1,8 @@
 # coding=utf-8
+import json
+
+from django.core import serializers
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template.context_processors import csrf
 
@@ -44,3 +48,25 @@ def wordTemplate(request):
                       'meaningIndex': request.GET.get('meaningIndex', '0'),
                       'wordIndex': request.GET.get('wordIndex', '0'),
                   })
+
+
+def edit(request, id):
+    ctx = {
+        'prefix': Prefix.get(id)
+    }
+    ctx.update(csrf(request))
+    return render(request, 'prefix/edit.html', ctx)
+
+
+def prefixJSON(request, id):
+    prefix = Prefix.get(id)
+    data = prefix.as_json()
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def prefixesJSON(request):
+    data = []
+    prefixes = Prefix.getAll()
+    for prefix in prefixes:
+        data.append(prefix.as_json())
+    return HttpResponse(json.dumps(data), content_type='application/json')

@@ -1,4 +1,6 @@
 # coding=utf-8
+import json
+
 from django.db import IntegrityError
 from django.db import models
 
@@ -41,6 +43,16 @@ class Prefix(models.Model):
     @staticmethod
     def getLetters():
         return sorted(set(map(lambda p: p.prefix[0], Prefix.objects.all())))
+
+    def as_json(self):
+        j = dict(
+            id=self.pk,
+            prefix=self.prefix,
+            meanings=[]
+        )
+        for meaning in Meaning.objects.filter(prefix=self):
+            j['meanings'].append(meaning.as_json())
+        return j
 
     def __str__(self):
         return self.prefix
@@ -85,6 +97,17 @@ class Meaning(models.Model):
     def getAll():
         return Meaning.objects.all()
 
+    def as_json(self):
+        j = dict(
+            id=self.pk,
+            chinese=self.chinese,
+            english=self.english,
+            words=[],
+        )
+        for word in Word.objects.filter(meaning=self):
+            j['words'].append(word.as_json())
+        return j
+
     def __str__(self):
         return self.chinese + " " + self.english
 
@@ -107,6 +130,12 @@ class Word(models.Model):
     @staticmethod
     def getAll():
         return Word.objects.all()
+
+    def as_json(self):
+        return dict(
+            id=self.pk,
+            word=self.word,
+        )
 
     def __str__(self):
         return self.word
