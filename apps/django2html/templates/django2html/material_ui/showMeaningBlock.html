@@ -1,6 +1,6 @@
 {% load django2html %}
 
-{% for meaning in prefix.meaning_set.all %}
+{% for meaning in root.meaning_set.all %}
     <div class="well">
         <a href="javascript:void(0)" class="btn btn-info lowercase">
             {{ meaning.chinese }}&nbsp;&nbsp;{{ meaning.english }}

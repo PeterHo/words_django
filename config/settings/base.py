@@ -47,8 +47,7 @@ INSTALLED_APPS = (
 
     'apps.django2html',
 
-    'apps.words',
-    'apps.prefix',
+    'apps.root',
 )
 
 MIDDLEWARE_CLASSES = (

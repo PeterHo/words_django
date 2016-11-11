@@ -1,0 +1,20 @@
+<div class="footer">
+    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation" xmlns="http://www.w3.org/1999/html">
+        <div class="col-xs-12">
+            <div class="row" id="bottomNav">
+                <div class="col-xs-4 text-center footer-link">
+                    <a class="navbar-link center-block" href="{% url 'word:list' %}?type=prefix">
+                        <span><i class="material-icons">fast_rewind</i></span><br>Prefix</a>
+                </div>
+                <div class="col-xs-4 text-center footer-link">
+                    <a class="navbar-link center-block" href="{% url 'word:list' %}?type=root">
+                        <span><i class="material-icons">pause</i></span><br>Root</a>
+                </div>
+                <div class="col-xs-4 text-center footer-link">
+                    <a class="navbar-link center-block" href="{% url 'word:list' %}?type=suffix">
+                        <span><i class="material-icons">fast_forward</i></span><br>Suffix</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>

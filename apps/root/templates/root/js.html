@@ -24,7 +24,7 @@
 
     function addWord(meaningIndex) {
         var index = Math.max.apply(null, wordIndexList) + 1;
-        var url = ("{% url 'prefix:wordTemplate' %}?meaningIndex=" + meaningIndex + '&wordIndex=' + index);
+        var url = ("{% url 'word:wordTemplate' %}?meaningIndex=" + meaningIndex + '&wordIndex=' + index);
         $.get(url, function (word) {
             word = $.trim(word);
             $("#meaning_word_" + meaningIndex).append(word);
@@ -46,7 +46,7 @@
 
     function addMeaning() {
         var index = Math.max.apply(null, indexList) + 1;
-        var url = ("{% url 'prefix:meaningTemplate' %}?index=" + index);
+        var url = ("{% url 'word:meaningTemplate' %}?index=" + index);
         $.get(url, function (meaning) {
             meaning = $.trim(meaning);
             $("#meanings").append(meaning);

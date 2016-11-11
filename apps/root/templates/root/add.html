@@ -7,7 +7,7 @@
 {% block head_title %}欢迎回来{% endblock %}
 
 {% block head_javascript %}
-    {% include 'prefix/js.html' %}
+    {% include 'root/js.html' %}
     <script>
         $(function () {
             addMeaning();
@@ -19,10 +19,11 @@
     <br>
     <br>
 
-    <form action="{% url 'prefix:add' %}" method="post">
+    <form action="{% url 'word:add' %}" method="post">
         {% csrf_token %}
 
-        {% floatInput 'prefix' 'Prefix' %}
+        {% floatInput 'root' 'Root' %}
+        {% select 'type' 'Type' type_options default_type %}
 
         <div id="meanings">
         </div>

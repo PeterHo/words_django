@@ -7,79 +7,97 @@ from django.db import models
 __author__ = 'peter'
 
 
-class Prefix(models.Model):
-    prefix = models.CharField(max_length=50, unique=True)
+class Root(models.Model):
+    type_choices = (
+        ("prefix", "prefix"),
+        ("root", "root"),
+        ("suffix", "suffix"),
+    )
+    root = models.CharField(max_length=50, unique=True)
+    type = models.CharField(max_length=50, choices=type_choices, default='prefix')
 
     @staticmethod
-    def new(prefix=""):
-        p = Prefix()
-        p.prefix = prefix
-        return p
+    def new(root="", type="prefix"):
+        r = Root()
+        r.root = root
+        r.type = type
+        return r
 
-    # 通过request请求来添加一个新的Prefix,失败返回None
+    # 通过request请求来添加一个新的Root,失败返回None
     @staticmethod
     def add(request):
         if request.POST:
-            prefix = request.POST.get("prefix", "")
-            if prefix:
+            root = request.POST.get("root", "")
+            type = request.POST.get("type", "prefix")
+            if root:
                 try:
-                    p = Prefix.objects.get(prefix=prefix)
-                except Prefix.DoesNotExist:
-                    p = Prefix.new(prefix)
-                    p.save()
-                return p
+                    r = Root.objects.get(root=root, type=type)
+                except Root.DoesNotExist:
+                    r = Root.new(root, type)
+                    r.save()
+                return r
         return None
 
     @staticmethod
     def get(pk):
-        return Prefix.objects.get(pk=pk)
+        return Root.objects.get(pk=pk)
 
     @staticmethod
-    def getAll(letter=None):
+    def getAll(type="prefix", letter=None):
+        roots = Root.objects.filter(type=type)
         if letter:
-            return Prefix.objects.filter(prefix__startswith=letter)
-        return Prefix.objects.all()
+            return roots.filter(root__startswith=letter)
+        return roots
 
     @staticmethod
-    def getLetters():
-        return sorted(set(map(lambda p: p.prefix[0], Prefix.objects.all())))
+    def getLetters(type="prefix"):
+        return sorted(set(map(lambda r: r.root[0], Root.getAll(type))))
 
     def as_json(self):
         j = dict(
             id=self.pk,
-            prefix=self.prefix,
+            root=self.root,
+            type=self.type,
             meanings=[]
         )
-        for meaning in Meaning.objects.filter(prefix=self):
+        for meaning in Meaning.objects.filter(root=self):
             j['meanings'].append(meaning.as_json())
         return j
 
+    @staticmethod
+    def as_jsons(type="prefix", letter=None):
+        j = []
+        roots = Root.getAll(type, letter)
+        for root in roots:
+            j.append(root.as_json())
+        return j
+
     def __str__(self):
-        return self.prefix
+        return self.root
 
 
 class Meaning(models.Model):
     chinese = models.CharField(max_length=50, blank=True, null=True)
     english = models.CharField(max_length=50, blank=True, null=True)
-    prefix = models.ForeignKey(Prefix)
+    root = models.ForeignKey(Root)
 
     @staticmethod
-    def new(chinese="", english="", prefix=None):
+    def new(chinese="", english="", root=None):
         m = Meaning()
         m.chinese = chinese
         m.english = english
-        m.prefix = prefix
+        m.root = root
         return m
 
-    # 通过request请求来添加其包含的meaning,并与Prefix相关联,失败返回False
+    # 通过request请求来添加其包含的meaning,并与Root相关联,失败返回False
     @staticmethod
-    def add(request, prefix):
+    def add(request, root):
         if request.POST:
             for i in range(100):
                 chinese = request.POST.get("meaning_chinese_" + str(i), "")
                 english = request.POST.get("meaning_english_" + str(i), "")
                 if chinese or english:
-                    meaning = Meaning.new(chinese, english, prefix)
+                    meaning = Meaning.new(chinese, english, root)
                     meaning.save()
                     # 添加Word
                     for j in range(100):

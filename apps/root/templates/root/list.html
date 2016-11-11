@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% load django2html %}
+
+{% block head_title %}欢迎回来{% endblock %}
+
+{% block head_javascript %}
+    <script>
+        var roots = JSON.parse("{{ root.as_jsons }}".replace(/&#39;/g, '"'));
+        console.log(roots);
+    </script>
+    {% include 'root/js.html' %}
+    <script>
+        $(function () {
+            {#            addMeaning();#}
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+
+    <br>
+    {% url 'word:list' as all_url %}
+    {% with '?type='|add:type as all_url_params %}
+        {% if curLetter %}
+            {% raisedBtn all_url|add:all_url_params 'all' 'default' %}
+        {% else %}
+            {% raisedBtn all_url|add:all_url_params 'all' 'primary' %}
+        {% endif %}
+    {% endwith %}
+
+    {% for letter in letters %}
+        {% url 'word:list' as letter_url %}
+        {% with '?type='|add:type|add:'&letter='|add:letter as letter_url_params %}
+            {% if curLetter == letter %}
+                {% raisedBtn letter_url|add:letter_url_params letter 'primary' %}
+            {% else %}
+                {% raisedBtn letter_url|add:letter_url_params letter 'default' %}
+            {% endif %}
+        {% endwith %}
+    {% endfor %}
+
+    <br>
+
+    {% for root in roots %}
+        <div>
+            {% url 'word:edit' id=root.pk as edit_root_url %}
+            {% flatBtn edit_root_url root.root 'info' extraClass='lowercase' %}
+        </div>
+        {% showMeaningBlock root %}
+    {% endfor %}
+
+    <br>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            {% url 'word:add' as add_url %}
+            {% raisedBtn add_url|add:'?type='|add:type 'add root' 'success' extraClass='btn-block' %}
+        </div>
+    </div>
+
+{% endblock %}

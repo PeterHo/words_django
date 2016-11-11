@@ -65,16 +65,27 @@ def realBtn(id, text, color, type="", extraClass=""):
 
 
 @register.simple_tag
-def showPrefixMeaningBlock(prefix):
+def select(id, label, options, defaultValue=""):
     ctx = {
-        'prefix': prefix
+        'id': id,
+        'label': label,
+        'options': options,
+        'defaultValue': defaultValue,
     }
-    return render_template_file("showPrefixMeaningBlock", ctx)
+    return render_template_file("select", ctx)
 
 
 @register.simple_tag
-def addPrefixMeaningBlock(index):
+def showMeaningBlock(root):
+    ctx = {
+        'root': root
+    }
+    return render_template_file("showMeaningBlock", ctx)
+
+
+@register.simple_tag
+def addMeaningBlock(index):
     ctx = {
         'index': str(index)
     }
-    return render_template_file("addPrefixMeaningBlock", ctx)
+    return render_template_file("addMeaningBlock", ctx)

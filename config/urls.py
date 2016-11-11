@@ -22,8 +22,7 @@ from config.settings import local
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^words/', include('apps.words.urls', namespace="words")),
-    url(r'^prefix/', include('apps.prefix.urls', namespace="prefix")),
+    url(r'^word/', include('apps.root.urls', namespace="word")),
     url(r'^admin/', include(admin.site.urls)),
 ]
 urlpatterns += static(local.MEDIA_URL, document_root=local.MEDIA_ROOT)

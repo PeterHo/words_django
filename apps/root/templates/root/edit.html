@@ -8,11 +8,9 @@
 
 {% block head_javascript %}
     <script>
-        var prefix = JSON.parse("{{ prefix.as_json }}".replace(/&#39;/g, '"'));
-        console.log(prefix);
-        console.log(prefix['meanings']);
+        var root = JSON.parse("{{ root.as_json }}".replace(/&#39;/g, '"'));
     </script>
-    {% include 'prefix/js.html' %}
+    {% include 'root/js.html' %}
     <script>
         $(function () {
             addMeaning();
@@ -24,10 +22,10 @@
     <br>
     <br>
 
-    <form action="{% url 'prefix:edit' id=prefix.pk %}" method="post">
+    <form action="{% url 'root:edit' id=root.pk %}" method="post">
         {% csrf_token %}
 
-        {% floatInput 'prefix' 'Prefix' text=prefix.prefix %}
+        {% floatInput 'root' 'Root' text=root.root %}
 
 
         <div id="meanings">

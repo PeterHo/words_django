@@ -1,0 +1,12 @@
+<div class="form-group label-floating">
+    <label for={{ id }} class="control-label">{{ label }}</label>
+    <select id="{{ id }}" name="{{ id }}" class="form-control">
+        {% for option in options %}
+            <option value={{ option.value }}
+                            {% if option.value == defaultValue %}
+                                selected="selected"
+                            {% endif %}
+            >{{ option.text }}</option>
+        {% endfor %}
+    </select>
+</div>

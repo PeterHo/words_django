@@ -6,3 +6,9 @@
     position: relative;
     z-index: 99999 !important;
 }
+
+.footer-link {
+    position: relative;
+    font-size: 14px;
+    transform: translateY(15%);
+}

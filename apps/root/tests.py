@@ -4,21 +4,21 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.test import TestCase
 
-from apps.prefix.views import prefixJSON
-from .models import Prefix, Meaning, Word
+from .views import rootJSON
+from .models import Root, Meaning, Word
 
 __author__ = 'peter'
 
 
-class PrefixTest(TestCase):
-    def test_get_prefix_json(self):
-        prefix = Prefix.new('aa')
-        prefix.save()
+class RootTest(TestCase):
+    def test_get_root_json(self):
+        root = Root.new('aa')
+        root.save()
 
-        meaning1 = Meaning.new("中文", "en", prefix)
+        meaning1 = Meaning.new("中文", "en", root)
         meaning1.save()
 
-        meaning2 = Meaning.new("ch2", "en2", prefix)
+        meaning2 = Meaning.new("ch2", "en2", root)
         meaning2.save()
 
         word11 = Word.new("w11", meaning1)
@@ -31,5 +31,5 @@ class PrefixTest(TestCase):
         word22.save()
 
         request = HttpRequest()
-        response = prefixJSON(request, prefix.pk)
+        response = rootJSON(request, root.pk)
         print(response.content)
