@@ -43,8 +43,10 @@ class Root(models.Model):
         return Root.objects.get(pk=pk)
 
     @staticmethod
-    def getAll(type="prefix", letter=None):
-        roots = Root.objects.filter(type=type)
+    def getAll(type=None, letter=None):
+        roots = Root.objects.filter()
+        if type:
+            roots = roots.filter(type=type)
         if letter:
             return roots.filter(root__startswith=letter)
         return roots
@@ -65,7 +67,7 @@ class Root(models.Model):
         return j
 
     @staticmethod
-    def as_jsons(type="prefix", letter=None):
+    def as_jsons(type=None, letter=None):
         j = []
         roots = Root.getAll(type, letter)
         for root in roots:

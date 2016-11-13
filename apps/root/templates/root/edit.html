@@ -22,11 +22,11 @@
     <br>
     <br>
 
-    <form action="{% url 'root:edit' id=root.pk %}" method="post">
+    <form action="{% url 'word:edit' id=root.pk %}" method="post">
         {% csrf_token %}
 
         {% floatInput 'root' 'Root' text=root.root %}
-
+        {% select 'type' 'Type' type_options default_type %}
 
         <div id="meanings">
         </div>

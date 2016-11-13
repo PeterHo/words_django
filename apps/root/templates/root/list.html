@@ -8,13 +8,13 @@
 
 {% block head_javascript %}
     <script>
-        var roots = JSON.parse("{{ root.as_jsons }}".replace(/&#39;/g, '"'));
+        var type = "{{ type }}";
+        var roots = JSON.parse("{{ rootJsons }}".replace(/&#39;/g, '"'));
         console.log(roots);
     </script>
     {% include 'root/js.html' %}
     <script>
         $(function () {
-            {#            addMeaning();#}
         });
     </script>
 {% endblock %}
@@ -22,24 +22,18 @@
 {% block content %}
 
     <br>
-    {% url 'word:list' as all_url %}
-    {% with '?type='|add:type as all_url_params %}
-        {% if curLetter %}
-            {% raisedBtn all_url|add:all_url_params 'all' 'default' %}
-        {% else %}
-            {% raisedBtn all_url|add:all_url_params 'all' 'primary' %}
-        {% endif %}
-    {% endwith %}
+    {% if curLetter %}
+        {% raisedBtn all_url 'all' 'default' %}
+    {% else %}
+        {% raisedBtn all_url 'all' 'primary' %}
+    {% endif %}
 
     {% for letter in letters %}
-        {% url 'word:list' as letter_url %}
-        {% with '?type='|add:type|add:'&letter='|add:letter as letter_url_params %}
-            {% if curLetter == letter %}
-                {% raisedBtn letter_url|add:letter_url_params letter 'primary' %}
-            {% else %}
-                {% raisedBtn letter_url|add:letter_url_params letter 'default' %}
-            {% endif %}
-        {% endwith %}
+        {% if curLetter == letter %}
+            {% raisedBtn all_url|add:'&letter='|add:letter letter 'primary' %}
+        {% else %}
+            {% raisedBtn all_url|add:'&letter='|add:letter letter 'default' %}
+        {% endif %}
     {% endfor %}
 
     <br>
@@ -49,7 +43,20 @@
             {% url 'word:edit' id=root.pk as edit_root_url %}
             {% flatBtn edit_root_url root.root 'info' extraClass='lowercase' %}
         </div>
-        {% showMeaningBlock root %}
+        {% for meaning in root.meaning_set.all %}
+            <div class="well">
+                <a href="javascript:void(0)" class="btn btn-info lowercase">
+                    {{ meaning.chinese }}&nbsp;&nbsp;{{ meaning.english }}
+                </a>
+                <div class="well">
+                    <a href="javascript:void(0)" class="btn btn-default lowercase">
+                        {% for word in meaning.word_set.all %}
+                            &nbsp;&nbsp;&nbsp;&nbsp;{{ word.word }}
+                        {% endfor %}
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
     {% endfor %}
 
     <br>

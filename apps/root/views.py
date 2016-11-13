@@ -2,6 +2,7 @@
 import json
 
 from django.core import serializers
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template.context_processors import csrf
@@ -9,6 +10,21 @@ from django.template.context_processors import csrf
 from .models import Root, Meaning, Word
 
 __author__ = 'peter'
+
+type_options = [
+    {
+        "text": "Prefix",
+        "value": "prefix",
+    },
+    {
+        "text": "Root",
+        "value": "root",
+    },
+    {
+        "text": "Suffix",
+        "value": "suffix",
+    }
+]
 
 
 # 添加前缀
@@ -22,24 +38,22 @@ def add(request):
         Meaning.add(request, root)
         return redirect("word:all")
     ctx = {
-        "type_options": [
-            {
-                "text": "Prefix",
-                "value": "prefix",
-            },
-            {
-                "text": "Root",
-                "value": "root",
-            },
-            {
-                "text": "Suffix",
-                "value": "suffix",
-            }
-        ],
+        "type_options": type_options,
         "default_type": request.GET.get("type", "prefix")
     }
     ctx.update(csrf(request))
     return render(request, 'root/add.html', ctx)
+
+
+def edit(request, id):
+    root = Root.get(id)
+    ctx = {
+        "type_options": type_options,
+        "default_type": root.type,
+        'root': root,
+    }
+    ctx.update(csrf(request))
+    return render(request, 'root/edit.html', ctx)
 
 
 # 显示所有词根
@@ -50,8 +64,9 @@ def list(request):
         'type': type,
         'curLetter': letter,
         'letters': Root.getLetters(type),
-        'root': Root,
+        'rootJsons': Root.as_jsons(type),
         'roots': Root.getAll(type, letter),
+        'all_url': reverse("word:list") + '?type=' + type,
     }
     return render(request, "root/list.html", ctx)
 
@@ -69,14 +84,6 @@ def wordTemplate(request):
                       'meaningIndex': request.GET.get('meaningIndex', '0'),
                       'wordIndex': request.GET.get('wordIndex', '0'),
                   })
-
-
-def edit(request, id):
-    ctx = {
-        'root': Root.get(id)
-    }
-    ctx.update(csrf(request))
-    return render(request, 'root/edit.html', ctx)
 
 
 def rootJSON(request, id):

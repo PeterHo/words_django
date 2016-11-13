@@ -1,6 +1,6 @@
 -r base.txt
 
-Django
+Django==1.8.3
 
 # sudo apt-get install python-setuptools libmysqld-dev libmysqlclient-dev python-dev
 # sudo easy_install mysql-python

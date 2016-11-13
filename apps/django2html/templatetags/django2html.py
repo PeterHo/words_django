@@ -1,5 +1,4 @@
 # coding=utf-8
-from __future__ import print_function, unicode_literals, absolute_import
 from django import template
 from django.template.loader import render_to_string
 
@@ -73,19 +72,3 @@ def select(id, label, options, defaultValue=""):
         'defaultValue': defaultValue,
     }
     return render_template_file("select", ctx)
-
-
-@register.simple_tag
-def showMeaningBlock(root):
-    ctx = {
-        'root': root
-    }
-    return render_template_file("showMeaningBlock", ctx)
-
-
-@register.simple_tag
-def addMeaningBlock(index):
-    ctx = {
-        'index': str(index)
-    }
-    return render_template_file("addMeaningBlock", ctx)
