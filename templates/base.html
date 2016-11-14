@@ -41,8 +41,8 @@
 <body>
 
 <div class="container">
+    {% include 'header.html' %}
     {% block content %}{% endblock %}
-    {% include 'footer.html' %}
 </div>
 
 {% block footer_javascript %}{% endblock %}

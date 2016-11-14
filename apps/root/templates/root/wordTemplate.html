@@ -1,7 +1,0 @@
-{% load django2html %}
-
-<div id="word_{{ meaningIndex }}_{{ wordIndex }}" class="well">
-    {% realBtn 'del_word_'|add:meaningIndex|add:'_'|add:wordIndex '<i class="material-icons">delete</i>' 'danger' extraClass='btn-xs pull-right onTop' %}
-    {% realBtn 'add_word_'|add:meaningIndex|add:'_'|add:wordIndex '<i class="material-icons">add</i>' 'success' extraClass='btn-xs pull-right onTop' %}
-    {% floatInput 'word_word_'|add:meaningIndex|add:'_'|add:wordIndex 'Word' %}
-</div>

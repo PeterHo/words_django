@@ -1,0 +1,23 @@
+<script>
+    var letters = getJson("{{ letters }}");
+    console.log(letters);
+
+    var type = "{{ type }}";
+    console.log(type);
+
+    var rootJson = getJson("{{ rootJson }}");
+    console.log(rootJson);
+
+    var rootsJson = getJson("{{ rootsJson }}");
+    console.log(rootsJson);
+
+    function getJson(str) {
+        if (str) {
+            return JSON.parse(str.replace(/&#39;/g, '"'));
+        }
+        return null;
+    }
+
+    var edit_url = "{{ edit_url }}";
+    var list_url = "{{ list_url }}";
+</script>

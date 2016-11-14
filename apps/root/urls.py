@@ -13,6 +13,4 @@ urlpatterns = [
     url(r'^edit/(?P<id>\d+)/$', views.edit, name='edit'),
     url(r'^rootJSON/(?P<id>\d+)/$', views.rootJSON, name='rootJSON'),
     url(r'^roots/$', views.rootsJSON, name='rootsJSON'),
-    url(r'^template/meaning/$', views.meaningTemplate, name='meaningTemplate'),
-    url(r'^template/word/$', views.wordTemplate, name='wordTemplate'),
 ]

@@ -48,12 +48,17 @@ class Root(models.Model):
         if type:
             roots = roots.filter(type=type)
         if letter:
-            return roots.filter(root__startswith=letter)
-        return roots
+            roots = roots.filter(root__startswith=letter)
+        return roots.order_by('root')
 
     @staticmethod
-    def getLetters(type="prefix"):
-        return sorted(set(map(lambda r: r.root[0], Root.getAll(type))))
+    def getLetters():
+        letters = {
+            'prefix': sorted(set(map(lambda r: r.root[0], Root.getAll('prefix')))),
+            'root': sorted(set(map(lambda r: r.root[0], Root.getAll('root')))),
+            'suffix': sorted(set(map(lambda r: r.root[0], Root.getAll('suffix')))),
+        }
+        return letters
 
     def as_json(self):
         j = dict(

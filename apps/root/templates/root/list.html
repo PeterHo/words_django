@@ -7,64 +7,30 @@
 {% block head_title %}欢迎回来{% endblock %}
 
 {% block head_javascript %}
-    <script>
-        var type = "{{ type }}";
-        var roots = JSON.parse("{{ rootJsons }}".replace(/&#39;/g, '"'));
-        console.log(roots);
-    </script>
-    {% include 'root/js.html' %}
+    {% include 'root/jsons.html' %}
+    <script src="{% static 'js/dom.js' %}"></script>
+    <script src="{% static 'js/showRoots.js' %}"></script>
+    <script src="{% static 'js/nav.js' %}"></script>
     <script>
         $(function () {
+            showAllRoots();
         });
     </script>
 {% endblock %}
 
 {% block content %}
 
-    <br>
-    {% if curLetter %}
-        {% raisedBtn all_url 'all' 'default' %}
-    {% else %}
-        {% raisedBtn all_url 'all' 'primary' %}
-    {% endif %}
-
-    {% for letter in letters %}
-        {% if curLetter == letter %}
-            {% raisedBtn all_url|add:'&letter='|add:letter letter 'primary' %}
-        {% else %}
-            {% raisedBtn all_url|add:'&letter='|add:letter letter 'default' %}
-        {% endif %}
-    {% endfor %}
+    <div id="letters"></div>
 
     <br>
-
-    {% for root in roots %}
-        <div>
-            {% url 'word:edit' id=root.pk as edit_root_url %}
-            {% flatBtn edit_root_url root.root 'info' extraClass='lowercase' %}
-        </div>
-        {% for meaning in root.meaning_set.all %}
-            <div class="well">
-                <a href="javascript:void(0)" class="btn btn-info lowercase">
-                    {{ meaning.chinese }}&nbsp;&nbsp;{{ meaning.english }}
-                </a>
-                <div class="well">
-                    <a href="javascript:void(0)" class="btn btn-default lowercase">
-                        {% for word in meaning.word_set.all %}
-                            &nbsp;&nbsp;&nbsp;&nbsp;{{ word.word }}
-                        {% endfor %}
-                    </a>
-                </div>
-            </div>
-        {% endfor %}
-    {% endfor %}
+    <div id="roots"></div>
 
     <br>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            {% url 'word:add' as add_url %}
             {% raisedBtn add_url|add:'?type='|add:type 'add root' 'success' extraClass='btn-block' %}
         </div>
     </div>
 
+    <br><br><br>
 {% endblock %}

@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template.context_processors import csrf
+from django.template.loader import render_to_string
 
 from .models import Root, Meaning, Word
 
@@ -36,10 +37,11 @@ def add(request):
             return redirect("word:add")
         # 添加前缀的意思和例词
         Meaning.add(request, root)
-        return redirect("word:all")
+        return redirect(reverse("word:all") + '?type=' + root.type)
     ctx = {
         "type_options": type_options,
-        "default_type": request.GET.get("type", "prefix")
+        "default_type": request.GET.get("type", "prefix"),
+        "list_url": reverse("word:list")
     }
     ctx.update(csrf(request))
     return render(request, 'root/add.html', ctx)
@@ -47,10 +49,19 @@ def add(request):
 
 def edit(request, id):
     root = Root.get(id)
+    if request.POST:
+        root.delete()
+        # 添加前缀
+        root = Root.add(request)
+        # 添加前缀的意思和例词
+        Meaning.add(request, root)
+        return redirect(reverse("word:all") + '?type=' + root.type)
     ctx = {
         "type_options": type_options,
         "default_type": root.type,
         'root': root,
+        'rootJson': root.as_json(),
+        "list_url": reverse("word:list")
     }
     ctx.update(csrf(request))
     return render(request, 'root/edit.html', ctx)
@@ -59,31 +70,16 @@ def edit(request, id):
 # 显示所有词根
 def list(request):
     type = request.GET.get("type", "prefix")
-    letter = request.GET.get("letter", None)
     ctx = {
         'type': type,
-        'curLetter': letter,
-        'letters': Root.getLetters(type),
-        'rootJsons': Root.as_jsons(type),
-        'roots': Root.getAll(type, letter),
-        'all_url': reverse("word:list") + '?type=' + type,
+        'letters': Root.getLetters(),
+        'rootsJson': Root.as_jsons(),
+        'roots': Root.getAll(),
+        "list_url": reverse("word:list"),
+        'add_url': reverse("word:add"),
+        'edit_url': reverse("word:edit", kwargs={'id': '123456'}),
     }
     return render(request, "root/list.html", ctx)
-
-
-def meaningTemplate(request):
-    return render(request, 'root/meaningTemplate.html',
-                  {
-                      'index': request.GET.get('index', '0'),
-                  })
-
-
-def wordTemplate(request):
-    return render(request, 'root/wordTemplate.html',
-                  {
-                      'meaningIndex': request.GET.get('meaningIndex', '0'),
-                      'wordIndex': request.GET.get('wordIndex', '0'),
-                  })
 
 
 def rootJSON(request, id):

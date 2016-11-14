@@ -7,17 +7,18 @@
 {% block head_title %}欢迎回来{% endblock %}
 
 {% block head_javascript %}
-    {% include 'root/js.html' %}
+    {% include 'root/jsons.html' %}
+    <script src="{% static 'js/dom.js' %}"></script>
+    <script src="{% static 'js/editRoots.js' %}"></script>
+    <script src="{% static 'js/nav.js' %}"></script>
     <script>
         $(function () {
-            addMeaning();
+            addMeaningBlock();
         });
     </script>
 {% endblock %}
 
 {% block content %}
-    <br>
-    <br>
 
     <form action="{% url 'word:add' %}" method="post">
         {% csrf_token %}
@@ -39,5 +40,8 @@
             </div>
         </div>
     </form>
+
+    <br><br><br>
+
 {% endblock %}
 
