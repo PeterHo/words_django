@@ -5,15 +5,19 @@
 function showLetters(letters) {
     var letterDom = $("#letters");
     letterDom.empty();
-    letterDom.append(raisedBtn(null, 'all', 'default', null, null, "onLetterClick(this)"));
+    var dom = div(null, "btn-group btn-group-justified btn-group-raised");
+    letterDom.append(dom);
+    // dom.append(raisedBtn(null, icon('home'), 'default', null, null, "onLetterClick(this)"));
+    dom.append(raisedBtn(null, 'all', 'default', null, null, "onLetterClick(this)"));
     for (var letter of letters[type]) {
-        letterDom.append(raisedBtn(null, letter, 'default', null, null, `onLetterClick(this, '${letter}')`));
+        dom.append(raisedBtn(null, letter, 'default', null, null, `onLetterClick(this, '${letter}')`));
     }
 }
 
+
 // 取消所有字母按钮的选中效果
 function defaultAllLetterBtns() {
-    $("#letters > a").each(function () {
+    $("#letters a").each(function () {
         $(this).removeClass("btn-primary").addClass("btn-default");
     });
 }
@@ -28,7 +32,12 @@ function onLetterClick(btn, letter) {
 // 显示一项meaning
 function meaningShowBlock(meaning) {
     var dom = div(null, 'well');
-    dom.append(flatBtn(null, meaning.chinese + "&nbsp;&nbsp;" + meaning.english, "info", null, "lowercase"));
+    // dom.append(flatBtn(null, meaning.chinese + "&nbsp;&nbsp;" + meaning.english, "info", null, "lowercase"));
+    if (meaning.english) {
+        dom.append($(`<div>${meaning.english}&nbsp;&nbsp;${meaning.chinese}</div>`));
+    } else {
+        dom.append($(`<div>${meaning.chinese}</div>`));
+    }
     dom.append(wordsShowBlock(meaning));
     return dom;
 }
@@ -45,12 +54,17 @@ function meaningsShowBlock(root) {
 
 // 显示meaning的所有words
 function wordsShowBlock(meaning) {
+    if (!meaning.words.length) {
+        return null;
+    }
     var dom = div(null, 'well');
+    // var dom = div();
     var words = "";
     for (var word of meaning.words) {
-        words += "&nbsp;&nbsp;" + word.word;
+        words += word.word + "<br>";
     }
-    dom.append(flatBtn(null, words, "default", null, "lowercase"));
+    // dom.append(flatBtn(null, words, "default", null, "lowercase"));
+    dom.append($(`<div>${words}</div>`));
     return dom;
 }
 
@@ -79,5 +93,5 @@ function showRoots(letter) {
 // 显示页面
 function showAllRoots() {
     showLetters(letters);
-    $("#letters > a")[0].click();
+    $("#letters a")[0].click();
 }

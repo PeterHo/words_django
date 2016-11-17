@@ -13,8 +13,11 @@ class Root(models.Model):
         ("root", "root"),
         ("suffix", "suffix"),
     )
-    root = models.CharField(max_length=50, unique=True)
+    root = models.CharField(max_length=50)
     type = models.CharField(max_length=50, choices=type_choices, default='prefix')
+
+    class Meta:
+        unique_together = ('root', 'type',)
 
     @staticmethod
     def new(root="", type="prefix"):

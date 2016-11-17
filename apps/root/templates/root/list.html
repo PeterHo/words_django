@@ -4,7 +4,7 @@
 
 {% load django2html %}
 
-{% block head_title %}欢迎回来{% endblock %}
+{% block head_title %}Words List{% endblock %}
 
 {% block head_javascript %}
     {% include 'root/jsons.html' %}
@@ -25,12 +25,8 @@
     <br>
     <div id="roots"></div>
 
-    <br>
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            {% raisedBtn add_url|add:'?type='|add:type 'add root' 'success' extraClass='btn-block' %}
-        </div>
-    </div>
+    <a href="{{ add_url|add:'?type='|add:type }}" class="btn btn-info btn-raised btn-fab fixed">
+        <i class="material-icons">add</i></a>
 
     <br><br><br>
 {% endblock %}
