@@ -30,7 +30,7 @@ class Root(models.Model):
     @staticmethod
     def add(request):
         if request.POST:
-            root = request.POST.get("root", "")
+            root = request.POST.get("root", "").strip()
             type = request.POST.get("type", "prefix")
             if root:
                 try:
@@ -46,20 +46,28 @@ class Root(models.Model):
         return Root.objects.get(pk=pk)
 
     @staticmethod
-    def getAll(type=None, letter=None):
+    def getAll(type=None):
         roots = Root.objects.filter()
         if type:
             roots = roots.filter(type=type)
-        if letter:
-            roots = roots.filter(root__startswith=letter)
         return roots.order_by('root')
+
+    @staticmethod
+    def getLettersByType(type):
+        letters = []
+        roots = Root.getAll(type)
+        for root in roots:
+            rs = root.root.split('/')
+            for r in rs:
+                letters.append(r[0])
+        return sorted(set(letters))
 
     @staticmethod
     def getLetters():
         letters = {
-            'prefix': sorted(set(map(lambda r: r.root[0], Root.getAll('prefix')))),
-            'root': sorted(set(map(lambda r: r.root[0], Root.getAll('root')))),
-            'suffix': sorted(set(map(lambda r: r.root[0], Root.getAll('suffix')))),
+            'prefix': Root.getLettersByType('prefix'),
+            'root': Root.getLettersByType('root'),
+            'suffix': Root.getLettersByType('suffix'),
         }
         return letters
 
@@ -75,9 +83,9 @@ class Root(models.Model):
         return j
 
     @staticmethod
-    def as_jsons(type=None, letter=None):
+    def as_jsons(type=None):
         j = []
-        roots = Root.getAll(type, letter)
+        roots = Root.getAll(type)
         for root in roots:
             j.append(root.as_json())
         return j
@@ -104,14 +112,14 @@ class Meaning(models.Model):
     def add(request, root):
         if request.POST:
             for i in range(100):
-                chinese = request.POST.get("meaning_chinese_" + str(i), "")
-                english = request.POST.get("meaning_english_" + str(i), "")
+                chinese = request.POST.get("meaning_chinese_" + str(i), "").strip()
+                english = request.POST.get("meaning_english_" + str(i), "").strip()
                 if chinese or english:
                     meaning = Meaning.new(chinese, english, root)
                     meaning.save()
                     # 添加Word
                     for j in range(100):
-                        word = request.POST.get("word_word_%d_%d" % (i, j))
+                        word = request.POST.get("word_word_%d_%d" % (i, j), "").strip()
                         if word:
                             Word.new(word, meaning).save()
             return True

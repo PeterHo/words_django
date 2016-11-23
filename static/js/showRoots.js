@@ -9,9 +9,10 @@ function showLetters(letters) {
     letterDom.append(dom);
     // dom.append(raisedBtn(null, icon('home'), 'default', null, null, "onLetterClick(this)"));
     dom.append(raisedBtn(null, 'all', 'default', null, null, "onLetterClick(this)"));
-    for (var letter of letters[type]) {
+
+    letters[type].forEach(function (letter) {
         dom.append(raisedBtn(null, letter, 'default', null, null, `onLetterClick(this, '${letter}')`));
-    }
+    });
 }
 
 
@@ -45,9 +46,10 @@ function meaningShowBlock(meaning) {
 // 显示词根的所有meaning
 function meaningsShowBlock(root) {
     var meanings = [];
-    for (var meaning of root.meanings) {
+
+    root.meanings.forEach(function (meaning) {
         meanings.push(meaningShowBlock(meaning));
-    }
+    });
 
     return meanings;
 }
@@ -73,14 +75,25 @@ function showRoots(letter) {
     if (letter) {
         curLetter = letter;
     }
+
     var rootsDom = $("#roots");
     rootsDom.empty();
     for (var root of rootsJson) {
         if (root.type !== type) {
             continue;
         }
-        if (letter && !root.root.startsWith(letter)) {
-            continue;
+        if (letter) {
+            var isLetter = false;
+            var ls = root.root.split('/');
+            for (l of ls) {
+                if (l.startsWith(letter)) {
+                    isLetter = true;
+                    break;
+                }
+            }
+            if (!isLetter) {
+                continue;
+            }
         }
 
         var dom = div().append(flatBtn(edit_url.replace('123456', root.id), root.root, 'info', null, 'lowercase'));
