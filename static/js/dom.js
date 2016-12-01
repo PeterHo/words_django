@@ -48,7 +48,7 @@ function floatInput(id, label, text) {
     var input = $(`
             <div class="form-group label-floating">
                 <label for=${id} class="control-label">${label}</label>
-                <input class="form-control" id=${id} type="text" name=${id} value=${text}>
+                <input class="form-control" id=${id} type="text" name=${id} value="${text}">
             </div>
         `);
     return input;
